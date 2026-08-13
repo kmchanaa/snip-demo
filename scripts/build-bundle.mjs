@@ -132,6 +132,9 @@ const railwayJson = {
     builder: 'DOCKERFILE',
     dockerfilePath: 'Dockerfile',
   },
+  deploy: {
+    startCommand: 'bun server.js',
+  },
 };
 writeFileSync(join(bundleDir, 'railway.json'), JSON.stringify(railwayJson, null, 2) + '\n');
 

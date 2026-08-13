@@ -1,0 +1,9 @@
+.git
+.github
+backend
+bundle
+cli
+frontend
+scripts
+node_modules
+*.log
