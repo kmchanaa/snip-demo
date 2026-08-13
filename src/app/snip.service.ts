@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { signal } from '@angular/core';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { signal } from "@angular/core";
 
 export interface Link {
   code: string;
@@ -20,10 +20,10 @@ export interface CreateLinkResponse {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class SnipService {
-  private readonly API_BASE = 'http://localhost:3000';
+  private readonly API_BASE = "http://localhost:3000";
 
   constructor(private http: HttpClient) {}
 
@@ -31,7 +31,7 @@ export class SnipService {
     return this.http.post<CreateLinkResponse>(
       `${this.API_BASE}/api/links`,
       { url },
-      { headers: { 'Content-Type': 'application/json' } }
+      { headers: { "Content-Type": "application/json" } },
     );
   }
 

@@ -1,20 +1,23 @@
-/* Global Styles */
+/* Global Styles - Lovable-inspired Dark Theme */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   height: 100%;
-  background-color: #fafafa;
-  color: #333;
+  background-color: #0f0f0f;
+  color: #b0b0b0;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
 app-root {

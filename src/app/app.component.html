@@ -14,12 +14,12 @@
         (keyup.enter)="createLink()"
         [disabled]="loading()"
       />
-      <button 
-        (click)="createLink()" 
+      <button
+        (click)="createLink()"
         [disabled]="loading()"
         class="btn btn-primary"
       >
-        {{ loading() ? 'Creating...' : 'Shorten' }}
+        {{ loading() ? "Creating..." : "Shorten" }}
       </button>
     </div>
 
@@ -48,9 +48,9 @@
       <tbody>
         <tr *ngFor="let link of links()">
           <td class="code-cell">
-            <a 
-              [href]="link.shortUrl" 
-              target="_blank" 
+            <a
+              [href]="link.shortUrl"
+              target="_blank"
               rel="noopener noreferrer"
               class="short-code"
             >
