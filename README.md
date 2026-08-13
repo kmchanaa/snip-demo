@@ -36,21 +36,21 @@ Each layer lives on its own **orphan branch** (independent git history, files at
 
 All clients consume this exact HTTP API (same schema, same status codes):
 
-| Method | Path | Request | Response | Notes |
-|--------|------|---------|----------|-------|
-| **POST** | `/api/links` | `{ "url": "https://…" }` | `201 { code, url, shortUrl, hits, createdAt }` | Validates http/https only; 400 on invalid |
-| **GET** | `/api/links` | — | `200 [{ code, url, shortUrl, hits, createdAt }, …]` | Returns all links as array |
-| **GET** | `/:code` | — | `302` redirect to original URL | Increments `hits`; 404 if unknown |
+| Method   | Path         | Request                  | Response                                            | Notes                                     |
+| -------- | ------------ | ------------------------ | --------------------------------------------------- | ----------------------------------------- |
+| **POST** | `/api/links` | `{ "url": "https://…" }` | `201 { code, url, shortUrl, hits, createdAt }`      | Validates http/https only; 400 on invalid |
+| **GET**  | `/api/links` | —                        | `200 [{ code, url, shortUrl, hits, createdAt }, …]` | Returns all links as array                |
+| **GET**  | `/:code`     | —                        | `302` redirect to original URL                      | Increments `hits`; 404 if unknown         |
 
 ### Data Shape
 
 ```json
 {
-  "code": "aB3xYz",              // 6-char base62 random
-  "url": "https://example.com",  // Original URL
-  "shortUrl": "http://localhost:3000/aB3xYz",  // Full short link
-  "hits": 5,                     // Redirect count (starts at 0)
-  "createdAt": "2026-08-13T12:34:56.789Z"  // ISO timestamp
+  "code": "aB3xYz", // 6-char base62 random
+  "url": "https://example.com", // Original URL
+  "shortUrl": "http://localhost:3000/aB3xYz", // Full short link
+  "hits": 5, // Redirect count (starts at 0)
+  "createdAt": "2026-08-13T12:34:56.789Z" // ISO timestamp
 }
 ```
 
@@ -70,6 +70,7 @@ cd snip-demo
 Open three terminals from the `main` checkout:
 
 #### Terminal 1: Backend (port 3000)
+
 ```bash
 cd backend
 bun start
@@ -77,6 +78,7 @@ bun start
 ```
 
 #### Terminal 2: Frontend (port 4200)
+
 ```bash
 cd frontend
 npm install  # First time only
@@ -86,6 +88,7 @@ npx ng serve
 ```
 
 #### Terminal 3: CLI
+
 ```bash
 cd cli
 # List links
@@ -106,6 +109,7 @@ node cli.js help
 ### Adding a Feature to the Backend
 
 1. **Edit inside the submodule**:
+
    ```bash
    cd backend
    # Edit server.js
@@ -115,6 +119,7 @@ node cli.js help
    ```
 
 2. **Update the pointer in main**:
+
    ```bash
    cd ..  # back to superproject
    git submodule update --remote backend
@@ -161,12 +166,12 @@ git push origin main
 
 ## Branch Structure
 
-| Branch | Purpose | Files | History |
-|--------|---------|-------|---------|
-| `backend` | Bun API server | server.js, package.json | Orphan (independent) |
-| `frontend` | Angular web UI | src/, angular.json, design.md | Orphan (independent) |
-| `cli` | Node CLI tool | cli.js, snip.cmd, snip.ps1 | Orphan (independent) |
-| `main` | Superproject aggregator | .gitmodules, README.md | Orphan (independent) |
+| Branch     | Purpose                 | Files                         | History              |
+| ---------- | ----------------------- | ----------------------------- | -------------------- |
+| `backend`  | Bun API server          | server.js, package.json       | Orphan (independent) |
+| `frontend` | Angular web UI          | src/, angular.json, design.md | Orphan (independent) |
+| `cli`      | Node CLI tool           | cli.js, snip.cmd, snip.ps1    | Orphan (independent) |
+| `main`     | Superproject aggregator | .gitmodules, README.md        | Orphan (independent) |
 
 Each branch has no parent commit; they're completely separate histories. This keeps each layer lean and decoupled.
 
@@ -252,18 +257,21 @@ The `branch = ...` line tells git which branch each submodule tracks. `git submo
 ## Common Tasks
 
 ### Update all submodules to latest
+
 ```bash
 git submodule update --init --recursive  # Clone/init if needed
 git submodule update --remote            # Fetch latest from tracking branches
 ```
 
 ### Check submodule status
+
 ```bash
 git submodule status
 # Shows: [commit] path/to/submodule (branch-name)
 ```
 
 ### See what changed in a submodule
+
 ```bash
 cd backend
 git log --oneline -5  # Last 5 commits on backend branch
@@ -272,9 +280,7 @@ git log --oneline -5  # Last 5 commits on backend branch
 ## Deployment
 
 Later steps show how to:
-- Assemble a **bundle** branch (combining backend + built frontend + CLI into one release)
-- Build a **Docker image** from the bundle
-- Deploy to platforms like Railway
+
 
 This architecture makes it easy to version and release different layer combinations.
 
