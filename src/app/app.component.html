@@ -1,0 +1,66 @@
+<div class="container">
+  <div class="hero">
+    <h1>Snip</h1>
+    <p class="subtitle">Shorten your URLs instantly</p>
+  </div>
+
+  <div class="form-section">
+    <div class="input-group">
+      <input
+        type="text"
+        [(ngModel)]="urlInput"
+        placeholder="Paste a URL (http:// or https://)"
+        class="url-input"
+        (keyup.enter)="createLink()"
+        [disabled]="loading()"
+      />
+      <button 
+        (click)="createLink()" 
+        [disabled]="loading()"
+        class="btn btn-primary"
+      >
+        {{ loading() ? 'Creating...' : 'Shorten' }}
+      </button>
+    </div>
+
+    <div *ngIf="successMessage()" class="alert alert-success">
+      {{ successMessage() }}
+    </div>
+    <div *ngIf="errorMessage()" class="alert alert-error">
+      {{ errorMessage() }}
+    </div>
+  </div>
+
+  <div class="links-section">
+    <h2>Your Links</h2>
+    <div *ngIf="links().length === 0" class="empty-state">
+      <p>No links yet. Create your first short link above!</p>
+    </div>
+
+    <table *ngIf="links().length > 0" class="links-table">
+      <thead>
+        <tr>
+          <th>Short Code</th>
+          <th>Original URL</th>
+          <th>Hits</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let link of links()">
+          <td class="code-cell">
+            <a 
+              [href]="link.shortUrl" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="short-code"
+            >
+              {{ link.code }}
+            </a>
+          </td>
+          <td class="url-cell">{{ link.url }}</td>
+          <td class="hits-cell">{{ link.hits }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
