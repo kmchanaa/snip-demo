@@ -1,0 +1,11 @@
+{
+  "name": "snip-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "bun run server.js"
+  },
+  "keywords": ["url-shortener", "snip"],
+  "author": "",
+  "license": "MIT"
+}
