@@ -127,7 +127,11 @@ writeFileSync(join(bundleDir, '.dockerignore'), dockerignore);
 // Create railway.json
 console.log('  - Creating railway.json');
 const railwayJson = {
-  builder: 'DOCKERFILE',
+  $schema: 'https://railway.com/railway.schema.json',
+  build: {
+    builder: 'DOCKERFILE',
+    dockerfilePath: 'Dockerfile',
+  },
 };
 writeFileSync(join(bundleDir, 'railway.json'), JSON.stringify(railwayJson, null, 2) + '\n');
 
