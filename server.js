@@ -31,6 +31,16 @@ const BASE_URL =
   (RAILWAY_PUBLIC_DOMAIN ? `https://${RAILWAY_PUBLIC_DOMAIN}` : 'http://localhost:3000');
 const PUBLIC_DIR = process.env.PUBLIC_DIR;
 
+function getContentType(path) {
+  if (path.endsWith('.html')) return 'text/html; charset=utf-8';
+  if (path.endsWith('.js')) return 'text/javascript; charset=utf-8';
+  if (path.endsWith('.css')) return 'text/css; charset=utf-8';
+  if (path.endsWith('.json')) return 'application/json; charset=utf-8';
+  if (path.endsWith('.txt')) return 'text/plain; charset=utf-8';
+  if (path.endsWith('.svg')) return 'image/svg+xml';
+  return 'application/octet-stream';
+}
+
 // Serve static files if PUBLIC_DIR is set
 async function serveStaticFile(pathname) {
   if (!PUBLIC_DIR) return null;
@@ -40,7 +50,7 @@ async function serveStaticFile(pathname) {
     const filePath = PUBLIC_DIR.replace(/\/$/, '') + path;
     const file = Bun.file(filePath);
     const exists = await file.exists();
-    return exists ? file : null;
+    return exists ? { file, path } : null;
   } catch {
     return null;
   }
@@ -134,6 +144,17 @@ const server = Bun.serve({
       });
     }
 
+    // Serve the bundled UI before treating paths as short codes.
+    if (method === 'GET') {
+      const staticAsset = await serveStaticFile(pathname);
+      if (staticAsset) {
+        return new Response(staticAsset.file, {
+          status: 200,
+          headers: { 'Content-Type': getContentType(staticAsset.path), ...corsHeaders },
+        });
+      }
+    }
+
     // GET /:code - Redirect to original URL
     if (method === 'GET' && pathname !== '/api/links' && pathname !== '/') {
       const code = pathname.slice(1); // Remove leading slash
@@ -158,11 +179,11 @@ const server = Bun.serve({
 
     // GET / - Serve index.html or static file if PUBLIC_DIR is set
     if (method === 'GET') {
-      const staticFile = await serveStaticFile(pathname);
-      if (staticFile) {
-        const contentType = pathname.endsWith('.html') ? 'text/html' : 'application/octet-stream';
-        return new Response(staticFile, {
-          headers: { 'Content-Type': contentType, ...corsHeaders },
+      const fallbackAsset = await serveStaticFile('/index.html');
+      if (fallbackAsset) {
+        return new Response(fallbackAsset.file, {
+          status: 200,
+          headers: { 'Content-Type': getContentType(fallbackAsset.path), ...corsHeaders },
         });
       }
     }
